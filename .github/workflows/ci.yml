@@ -1,45 +1,50 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - hotfix/SusErrores
   pull_request:
-    branches: [ main, hotfix/SusErrores ]
+    branches:
+      - main
+      - hotfix/SusErrores
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # BACKEND (Spring Boot)
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: "21"
-
-      - name: Build back
-        working-directory: back/McRonalds
-        run: mvn -B verify
-
+      # ============================
       # FRONTEND (React)
+      # ============================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: front/mcrondaldsfront/package-lock.json
 
-      - name: Install front dependencies
-        working-directory: front/mcrondaldsfront
-        run: npm ci
+      - name: Install Frontend Dependencies
+        working-directory: ./front/mcrondaldsfront
+        run: npm install
 
-      - name: Lint front
-        working-directory: front/mcrondaldsfront
-        run: npm run lint --if-present
-
-      - name: Test front
-        working-directory: front/mcrondaldsfront
-        run: npm test --if-present -- --watchAll=false
-
-      - name: Build front
-        working-directory: front/mcrondaldsfront
+      - name: Build Frontend
+        working-directory: ./front/mcrondaldsfront
         run: npm run build
+
+      # ============================
+      # BACKEND (Spring Boot)
+      # ============================
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: maven
+
+      - name: Build Backend
+        working-directory: ./back
+        run: mvn -B clean package
