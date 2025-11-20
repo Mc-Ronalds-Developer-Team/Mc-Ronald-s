@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches:
+      - main
       - hotfix/SusErrores
   pull_request:
     branches:
@@ -17,34 +18,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ============================
-      # FRONTEND (React)
-      # ============================
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: front/mcrondaldsfront/package-lock.json
-
-      - name: Install Frontend Dependencies
-        working-directory: ./front/mcrondaldsfront
-        run: npm install
-
-      - name: Build Frontend
-        working-directory: ./front/mcrondaldsfront
-        run: CI=false npm run build
-
-      # ============================
-      # BACKEND (Spring Boot)
-      # ============================
-      - name: Setup JDK
+      # ==============================
+      # 🔧 BACKEND (SPRING BOOT)
+      # ==============================
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: maven
+          java-version: "17"
+          distribution: "temurin"
 
-      - name: Build Backend
-        working-directory: ./back
+      - name: Build backend with Maven
         run: mvn -B clean package
+        working-directory: back
+
+      # ==============================
+      # 🔧 FRONTEND (REACT)
+      # ==============================
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: front/mcrondaldsfront
+
+      - name: Build frontend
+        env:
+          CI: false   # ← evita que eslint rompa el build
+        run: npm run build
+        working-directory: front/mcrondaldsfront
