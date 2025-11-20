@@ -15,6 +15,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/mercadopago/webhook", "/api/mercadopago/preference", "/api/mercadopago/success", "/api/mercadopago/failure", "/api/mercadopago/pending").permitAll()
+                        .requestMatchers("/api/menu-items/**", "/api/menu-categories/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
