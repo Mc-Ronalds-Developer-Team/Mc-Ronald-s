@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main, hotfix/SusErrores]
+    branches: [ main, hotfix/SusErrores ]
 
 jobs:
   build:
@@ -10,21 +10,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Use Node.js
+
+      # BACKEND (Spring Boot)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Build back
+        working-directory: back
+        run: mvn -B verify
+
+      # FRONTEND (React)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install front dependencies
+        working-directory: front
         run: npm ci
 
-      - name: Lint
+      - name: Lint front
+        working-directory: front
         run: npm run lint --if-present
 
-      - name: Run tests
-        run: npm test --if-present -- --watch=false --browsers=ChromeHeadless
+      - name: Test front
+        working-directory: front
+        run: npm test --if-present -- --watchAll=false
 
-      - name: Build
+      - name: Build front
+        working-directory: front
         run: npm run build
