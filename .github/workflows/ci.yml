@@ -27,6 +27,9 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Make Maven wrapper executable
+        run: chmod +x ./back/McRonalds/mvnw
+
       - name: Build backend with Maven Wrapper
         working-directory: ./back/McRonalds
         run: ./mvnw -B clean package
