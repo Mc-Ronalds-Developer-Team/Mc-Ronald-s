@@ -21,15 +21,15 @@ jobs:
       # ==============================
       # 🔧 BACKEND (SPRING BOOT)
       # ==============================
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: "17"
+          java-version: "21"
           distribution: "temurin"
 
-      - name: Build with Maven
+      - name: Build backend with Maven Wrapper
         working-directory: ./back/McRonalds
-        run: mvn -B clean package
+        run: ./mvnw -B clean package
 
       # ==============================
       # 🔧 FRONTEND (REACT)
