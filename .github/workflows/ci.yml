@@ -27,9 +27,9 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Build backend with Maven
+      - name: Build with Maven
+        working-directory: ./back/McRonalds
         run: mvn -B clean package
-        working-directory: back
 
       # ==============================
       # 🔧 FRONTEND (REACT)
