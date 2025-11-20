@@ -164,7 +164,61 @@ l0m1n2o HEAD@{2}: commit (initial): init: configuración inicial de Spring Boot
 
 ---
 
-## 💻 Base de datos
+---
+
+## ⚙️ Integración y Despliegue Continuo (CI/CD)
+
+Este proyecto utiliza **GitHub Actions** para automatizar los procesos de Integración Continua (CI) y Despliegue Continuo (CD).
+
+### 1. Integración Continua (CI)
+
+La Integración Continua se gestiona mediante el archivo `.github/workflows/ci.yml`.
+
+| Aspecto | Detalles |
+| :--- | :--- |
+| **Workflow** | `ci.yml` |
+| **Ubicación** | `back/McRonalds` (Spring Boot/Maven) |
+| **Disparador** | Cada `push` a las ramas principales. |
+| **Propósito** | Asegurar que el código se compila correctamente, se empaqueta y pasa todas las pruebas unitarias antes de cualquier intento de despliegue. |
+| **Acciones** | Checkout del código, configuración de Java, y ejecución de `mvn verify` o similar. |
+
+### 2. Despliegue Continuo (CD)
+
+El Despliegue Continuo (CD) se enfoca en el backend alojado en Render y se gestiona mediante el archivo `.github/workflows/deploy.yml`.
+
+| Aspecto | Detalles |
+| :--- | :--- |
+| **Workflow** | `deploy.yml` |
+| **Servicio** | Backend (carpeta `back/`) |
+| **Plataforma** | Render |
+| **Disparador** | Cada `push` a la rama `main` (o la configurada) **solo si hay cambios en la carpeta `back/**`**. |
+| **Método** | Activación del **Render Deploy Hook URL** mediante una solicitud `cURL`. |
+
+---
+
+## ☁️ Despliegue con Render
+
+El backend de la aplicación se despliega como un **Web Service** en Render, aprovechando el `Dockerfile` ubicado en `back/McRonalds/`.
+
+### Configuración Necesaria
+
+Para que el flujo de CD funcione, es **obligatorio** configurar un Secreto de Repositorio en GitHub:
+
+1.  **Obtener el Deploy Hook URL:** En el panel de control de Render, navega a tu servicio backend y copia el **Deploy Hook URL** generado.
+2.  **Crear el Secreto:** En tu repositorio de GitHub, ve a **Settings** > **Secrets and variables** > **Actions**.
+3.  Crea un nuevo secreto con el siguiente nombre y valor:
+
+| Secreto de GitHub | Valor |
+| :--- | :--- |
+| `RENDER_DEPLOY_HOOK_URL` | URL del Gancho de Despliegue de Render. |
+
+### Proceso de Despliegue
+
+Cada vez que se realiza un `push` a la rama de despliegue (`main`) y se detectan cambios en la carpeta `back/`, el workflow `deploy.yml`:
+1.  Ejecuta un comando `curl` a la URL secreta.
+2.  Render recibe la señal, extrae el código más reciente del repositorio (incluyendo el `Dockerfile` y el código Java), construye la nueva imagen Docker y la despliega automáticamente.
+
+---
 
 <img width="1237" height="178" alt="Image" src="https://github.com/user-attachments/assets/5865f2ad-a588-47a7-aeda-430509c6ec32" />
 
