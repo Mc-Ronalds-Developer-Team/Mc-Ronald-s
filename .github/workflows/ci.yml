@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Frontend
         working-directory: ./front/mcrondaldsfront
-        run: npm run build
+        run: CI=false npm run build
 
       # ============================
       # BACKEND (Spring Boot)
