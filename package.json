@@ -1,0 +1,23 @@
+{
+  "name": "mc-ronald-s",
+  "version": "1.0.0",
+  "description": "Mc Ronald's es un sistema desarrollado para un restaurante de comida rápida, cuyo objetivo es digitalizar y agilizar la experiencia de compra de los clientes mediante **pantallas táctiles** ubicadas dentro de los locales.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm --prefix front/mcrondaldsfront install --silent && npm --prefix front/mcrondaldsfront test -- --watchAll=false"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mc-Ronalds-Developer-Team/Mc-Ronald-s.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mc-Ronalds-Developer-Team/Mc-Ronald-s/issues"
+  },
+  "homepage": "https://github.com/Mc-Ronalds-Developer-Team/Mc-Ronald-s#readme",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}

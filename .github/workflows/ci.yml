@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - hotfix/SusErrores
+  pull_request:
+    branches:
+      - main
+      - hotfix/SusErrores
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ==============================
+      # 🔧 BACKEND (SPRING BOOT)
+      # ==============================
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Make Maven wrapper executable
+        run: chmod +x ./back/McRonalds/mvnw
+
+      - name: Build backend with Maven Wrapper
+        working-directory: ./back/McRonalds
+        run: ./mvnw -B clean package
+
+      # ==============================
+      # 🔧 FRONTEND (REACT)
+      # ==============================
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend dependencies
+        run: npm install --legacy-peer-deps
+        working-directory: front/mcrondaldsfront
+
+      - name: Build frontend
+        env:
+          CI: false   # ← evita que eslint rompa el build
+        run: npm run build
+        working-directory: front/mcrondaldsfront
