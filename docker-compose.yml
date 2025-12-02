@@ -1,0 +1,59 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mcronalds-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: mcronalds
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mcronalds-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-padmin"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build: 
+      context: ./back/McRonalds
+      dockerfile: Dockerfile
+    container_name: mcronalds-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mcronalds?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin
+      MERCADOPAGO_TOKEN: APP_USR-7332701054623871-092411-fabb4903bcc956b199e63e3e0be151cd-2711766388
+      MERCADOPAGO_SUCCESS_URL: http://localhost:8080/api/mercadopago/success
+      MERCADOPAGO_FAILURE_URL: http://localhost:8080/api/mercadopago/failure
+      MERCADOPAGO_PENDING_URL: http://localhost:8080/api/mercadopago/pending
+      MERCADOPAGO_NOTIFICATION_URL: http://localhost:8080/api/mercadopago/webhook
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mcronalds-network
+    restart: on-failure
+
+  frontend:
+    build:
+      context: ./front/mcrondaldsfront
+      dockerfile: Dockerfile
+    container_name: mcronalds-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - mcronalds-network
+
+volumes:
+  mysql-data:
+
+networks:
+  mcronalds-network:
+    driver: bridge

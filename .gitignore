@@ -1,38 +1,16 @@
-# ---- Java / Spring Boot ----
-target/
-*.class
-*.jar
-*.war
-*.ear
-*.iml
-*.log
-*.tmp
-*.out
-
-# Configuración de IDEs
-.idea/
-.vscode/
-*.swp
-
-# Archivos del sistema operativo
-.DS_Store
-Thumbs.db
-
-# ---- Node / React ----
-node_modules/
-build/
-dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Variables de entorno
+# Secrets
 .env
 .env.local
-.env.*.local
 
-# ---- Otros ----
-/bin/
-/.gradle/
-/mvnw
-/mvnw.cmd
+# Backend
+back/McRonalds/target/
+back/McRonalds/.mvn/
+
+# Frontend
+front/node_modules/
+front/dist/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
