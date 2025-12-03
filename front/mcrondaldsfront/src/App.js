@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
+// Componentes del cliente
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import Combos from "./pages/Combos/Combos";
+import Carrito from "./pages/Carrito/Carrito";
 
-import Sidebar from "./pages/Admin/Sidebar/Sidebar";
+// Componentes del Admin
+import LayoutAdmin from "./pages/Admin/LayoutAdmin";
+import Productos from "./pages/Admin/Productos/Productos";
+import Platos from "./pages/Admin/Platos/Platos";
+
+// Login
 import Login from "./pages/Login/Login";
 
+// Contexto del carrito
 import { CartProvider } from "./context/CartContext";
 
 function App() {
@@ -29,6 +37,7 @@ function App() {
             </div>
           }
         />
+        <Route path="/carrito" element={<Carrito />} />
 
         {/* LOGIN */}
         <Route
@@ -41,17 +50,15 @@ function App() {
           path="/admin/*"
           element={
             role === "ADMIN" ? (
-              <div className="admin-layout">
-                <Sidebar />
-                <div className="admin-content">
-                  <h1>Bienvenido Admin</h1>
-                </div>
-              </div>
+              <LayoutAdmin />
             ) : (
               <Navigate to="/login" />
             )
           }
-        />
+        >
+          <Route path="productos" element={<Productos />} />
+          <Route path="platos" element={<Platos />} />
+        </Route>
 
       </Routes>
     </CartProvider>

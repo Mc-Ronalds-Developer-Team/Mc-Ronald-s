@@ -10,41 +10,53 @@ const Sidebar = () => {
 
             <ul className="sidebar__menu">
 
-        <li>
-            <NavLink
-            to="/Admin/Productos"
-            className={({ isActive }) =>
-            isActive ? "sidebar__link active" : "sidebar__link"
-            }
-        >
-        Productos
-        </NavLink>
-        </li>
+                <li>
+                    <NavLink
+                        to="/Admin/Productos"
+                        className={({ isActive }) =>
+                            isActive ? "sidebar__link active" : "sidebar__link"
+                        }
+                    >
+                        Productos
+                    </NavLink>
+                </li>
 
-        <li>
-        <NavLink
-            to="/admin/usuarios"
-            className={({ isActive }) =>
-            isActive ? "sidebar__link active" : "sidebar__link"
-            }
-        >
-        Usuarios
-        </NavLink>
-        </li>
+                <li>
+                    <NavLink
+                        to="/admin/usuarios"
+                        className={({ isActive }) =>
+                            isActive ? "sidebar__link active" : "sidebar__link"
+                        }
+                    >
+                        Usuarios
+                    </NavLink>
+                </li>
 
-        <li>
-        <NavLink
-            to="/admin/pedidos"
-            className={({ isActive }) =>
-            isActive ? "sidebar__link active" : "sidebar__link"
-            }
-        >
-            Pedidos
-        </NavLink>
-        </li>
+                <li>
+                    <NavLink
+                        to="/admin/pedidos"
+                        className={({ isActive }) =>
+                            isActive ? "sidebar__link active" : "sidebar__link"
+                        }
+                    >
+                        Pedidos
+                    </NavLink>
+                </li>
 
-    </ul>
-    </aside>
+                <li>
+                    <NavLink
+                        to="/admin/platos"
+                        className={({ isActive }) =>
+                            isActive ? "sidebar__link active" : "sidebar__link"
+                        }
+                    >
+                        Platos
+                    </NavLink>
+                </li>
+
+
+            </ul>
+        </aside>
     );
 };
 
