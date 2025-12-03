@@ -1,78 +1,84 @@
-/* Layout general */
-.admin-layout {
-  display: flex;
-}
-
-/* Contenido del panel, separado del sidebar */
-.admin-content {
-  margin-left: 250px; /* ancho del sidebar */
-  padding: 30px;
-  width: calc(100% - 250px);
+.admin-container {
+  padding: 20px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
 }
 
 .admin-title {
   font-size: 2rem;
+  color: #333;
   margin-bottom: 20px;
+  border-bottom: 2px solid #e5133a;
+  padding-bottom: 10px;
 }
 
-/* Botón crear */
+.product-form {
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product-form input, 
+.product-form select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
 .btn-crear {
-  background-color: #e5133a;
-  color: #fff;
+  background-color: #28a745;
+  color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 20px;
   font-weight: bold;
+  font-size: 1rem;
 }
 
 .btn-crear:hover {
-  background-color: #c90f32;
+  background-color: #218838;
 }
 
-/* Tabla */
 .tabla-productos {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.tabla-productos th,
+.tabla-productos th, 
 .tabla-productos td {
-  border: 1px solid #ddd;
-  padding: 12px;
+  padding: 12px 15px;
   text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 .tabla-productos th {
-  background-color: #f2f2f2;
+  background-color: #e5133a;
+  color: white;
   font-weight: bold;
 }
 
-/* Botones accion */
-.btn-editar {
-  background-color: #1a73e8;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  margin-right: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.btn-editar:hover {
-  background-color: #125fc7;
+.tabla-productos tr:last-child td {
+  border-bottom: none;
 }
 
 .btn-eliminar {
-  background-color: #d32f2f;
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 6px 12px;
-  cursor: pointer;
   border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .btn-eliminar:hover {
-  background-color: #b51f1f;
+  background-color: #c82333;
 }

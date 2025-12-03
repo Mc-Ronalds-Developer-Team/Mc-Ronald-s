@@ -6,6 +6,8 @@ import Combos from './pages/Combos/Combos';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import LayoutAdmin from './pages/Admin/LayoutAdmin';
+import Productos from './pages/Admin/Productos/Productos'; // Asegúrate de que esta ruta exista
+import Cart from './pages/Cart/Cart'; // Asegúrate de que esta ruta exista
 import { CartProvider } from './context/CartContext';
 import './App.css';
 
@@ -18,7 +20,6 @@ function App() {
     setUserRole(null);
   };
 
-  // Componente para proteger rutas (Si no estás logueado, te manda al Login)
   const ProtectedRoute = ({ children }) => {
     if (!userRole) return <Navigate to="/" replace />;
     return children;
@@ -38,25 +39,39 @@ function App() {
               userRole ? <Navigate to="/menu" /> : <Login onLogin={handleLogin} /> 
             } />
             <Route path="/register" element={<Register />} />
+            
+            {/* Ruta del Menú (Cliente) */}
             <Route path="/menu" element={
               <ProtectedRoute>
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
-                <Combos className="flex-item combos" />
+                <Combos />
               </ProtectedRoute>
             } />
-
+            
             <Route path="/combos" element={
               <ProtectedRoute>
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Combos />
               </ProtectedRoute>
             } />
-            <Route path="/admin/*" element={
+
+            <Route path="/cart" element={
+              <ProtectedRoute>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Cart />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin" element={
               <ProtectedAdminRoute>
                 <LayoutAdmin onLogout={handleLogout} />
               </ProtectedAdminRoute>
-            } />
+            }>
+               <Route path="productos" element={<Productos />} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
