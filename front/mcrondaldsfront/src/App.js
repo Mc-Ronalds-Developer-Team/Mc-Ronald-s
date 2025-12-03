@@ -5,24 +5,29 @@ import Header from './components/Header/Header';
 import Combos from './pages/Combos/Combos';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import Hamburguesas from './pages/Hamburguesas/Hamburguesas';
 import LayoutAdmin from './pages/Admin/LayoutAdmin';
+import Productos from './pages/Admin/Productos/Productos'; // Asegúrate de que esta ruta exista
+import Cart from './pages/Cart/Cart'; // Asegúrate de que esta ruta exista
 import { CartProvider } from './context/CartContext';
 import './App.css';
 
-function App() {
-  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+// Componentes del cliente
+import Header from "./components/Header/Header";
+import Navbar from "./components/Navbar/Navbar";
+import Combos from "./pages/Combos/Combos";
+import Carrito from "./pages/Carrito/Carrito";
 
-  const handleLogin = (role) => setUserRole(role);
-  const handleLogout = () => {
-    localStorage.removeItem("userRole");
-    setUserRole(null);
-  };
+// Componentes del Admin
+import LayoutAdmin from "./pages/Admin/LayoutAdmin";
+import Productos from "./pages/Admin/Productos/Productos";
+import Platos from "./pages/Admin/Platos/Platos";
 
-  // Componente para proteger rutas (Si no estás logueado, te manda al Login)
-  const ProtectedRoute = ({ children }) => {
-    if (!userRole) return <Navigate to="/" replace />;
-    return children;
-  };
+// Login
+import Login from "./pages/Login/Login";
+
+// Contexto del carrito
+import { CartProvider } from "./context/CartContext";
 
   const ProtectedAdminRoute = ({ children }) => {
     if (userRole !== "ADMIN") return <Navigate to="/menu" replace />;
@@ -31,36 +36,43 @@ function App() {
 
   return (
     <CartProvider>
-      <BrowserRouter>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={ 
-              userRole ? <Navigate to="/menu" /> : <Login onLogin={handleLogin} /> 
-            } />
-            <Route path="/register" element={<Register />} />
-            <Route path="/menu" element={
-              <ProtectedRoute>
-                <Header />
-                <Navbar onLogout={handleLogout} userRole={userRole} />
-                <Combos className="flex-item combos" />
-              </ProtectedRoute>
-            } />
+      <Routes>
 
-            <Route path="/combos" element={
-              <ProtectedRoute>
-                <Navbar onLogout={handleLogout} userRole={userRole} />
-                <Combos />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/*" element={
-              <ProtectedAdminRoute>
-                <LayoutAdmin onLogout={handleLogout} />
-              </ProtectedAdminRoute>
-            } />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+        {/* VISTAS DEL CLIENTE */}
+        <Route
+          path="/"
+          element={
+            <div className="flex">
+              <Header className="flex-item header" />
+              <Navbar className="flex-item navbar" />
+              <Combos className="flex-item combos" />
+            </div>
+          }
+        />
+        <Route path="/carrito" element={<Carrito />} />
+
+        {/* LOGIN */}
+        <Route
+          path="/login"
+          element={<Login onLogin={(r) => setRole(r)} />}
+        />
+
+        {/* ADMIN */}
+        <Route
+          path="/admin/*"
+          element={
+            role === "ADMIN" ? (
+              <LayoutAdmin />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        >
+          <Route path="productos" element={<Productos />} />
+          <Route path="platos" element={<Platos />} />
+        </Route>
+
+      </Routes>
     </CartProvider>
   );
 }

@@ -1,0 +1,138 @@
+/* Layout general */
+.admin-layout {
+  display: flex;
+}
+
+/* Contenido */
+.admin-content {
+  margin-left: 250px;
+  padding: 40px;
+  width: calc(100% - 250px);
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Título */
+.admin-title {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Formulario */
+.form-plato {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.form-plato input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.form-plato button {
+  background-color: #e5133a;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.form-plato button:hover {
+  background-color: #c90f32;
+}
+
+/* Tabla */
+.tabla-platos {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.tabla-platos thead th {
+  background-color: #e5133a;
+  color: #fff;
+  font-weight: bold;
+  padding: 14px;
+  text-align: left;
+}
+
+.tabla-platos tbody td {
+  border-bottom: 1px solid #eee;
+  padding: 14px;
+  text-align: left;
+}
+
+.tabla-platos tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+.tabla-platos tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+/* Botones acción */
+.btn-editar {
+  background-color: #1a73e8;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-editar:hover {
+  background-color: #125fc7;
+}
+
+.btn-eliminar {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #b51f1f;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .form-plato {
+    flex-direction: column;
+  }
+
+  .tabla-platos {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
