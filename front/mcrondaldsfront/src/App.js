@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import Combos from './pages/Combos/Combos';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import Hamburguesas from './pages/Hamburguesas/Hamburguesas';
 import LayoutAdmin from './pages/Admin/LayoutAdmin';
 import Productos from './pages/Admin/Productos/Productos'; // Asegúrate de que esta ruta exista
 import Cart from './pages/Cart/Cart'; // Asegúrate de que esta ruta exista
@@ -45,6 +46,7 @@ function App() {
               <ProtectedRoute>
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Hamburguesas />
                 <Combos />
               </ProtectedRoute>
             } />
