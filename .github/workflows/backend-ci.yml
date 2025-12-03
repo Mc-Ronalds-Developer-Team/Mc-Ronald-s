@@ -1,46 +1,43 @@
-name: Pipeline CI/CD (Test y Despliegue)
+name: Backend Pipeline
 
 on:
   push:
     branches:
       - 'hotfix/SusErrores'
     paths:
-      - 'back/**'
-      - '.github/workflows/**'
+      - 'back/**'                 # Solo vigila la carpeta del backend
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
-  # --- TRABAJO 1: PRUEBAS (CI) ---
-  test:
-    name: Validar Backend (Test)
+  test-backend:
+    name: Test & Build Backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Configurar Java 17
+      - name: Configurar Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'maven'
 
-      - name: Ejecutar Tests con Maven
+      - name: Ejecutar Tests
         working-directory: back/McRonalds
-        # Asegúrate de que esta línea esté sola y sin texto extra al final:
         run: mvn clean verify
 
-  # --- TRABAJO 2: DESPLIEGUE (CD) ---
-  deploy:
-    name: Desplegar a Render
+  deploy-backend:
+    name: 🚀 Deploy Backend
     runs-on: ubuntu-latest
-    needs: test # Espera a que el test pase
+    needs: test-backend
+    # Solo despliega si estamos en la rama correcta
     if: github.ref == 'refs/heads/hotfix/SusErrores'
-    
     steps:
-      - name: Activar Render Deploy Hook
+      - name: Invocar Render Hook (Backend)
         run: |
           if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
-            echo "Error: El secreto RENDER_DEPLOY_HOOK_URL no está configurado."
+            echo "Error: Secreto RENDER_DEPLOY_HOOK_URL no encontrado."
             exit 1
           fi
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

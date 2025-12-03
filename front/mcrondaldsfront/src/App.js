@@ -1,6 +1,16 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import Navbar from './components/Navbar/Navbar';
+import Header from './components/Header/Header';
+import Combos from './pages/Combos/Combos';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Hamburguesas from './pages/Hamburguesas/Hamburguesas';
+import LayoutAdmin from './pages/Admin/LayoutAdmin';
+import Productos from './pages/Admin/Productos/Productos'; // Asegúrate de que esta ruta exista
+import Cart from './pages/Cart/Cart'; // Asegúrate de que esta ruta exista
+import { CartProvider } from './context/CartContext';
+import './App.css';
 
 // Componentes del cliente
 import Header from "./components/Header/Header";
@@ -19,8 +29,10 @@ import Login from "./pages/Login/Login";
 // Contexto del carrito
 import { CartProvider } from "./context/CartContext";
 
-function App() {
-  const [role, setRole] = useState(null);
+  const ProtectedAdminRoute = ({ children }) => {
+    if (userRole !== "ADMIN") return <Navigate to="/menu" replace />;
+    return children;
+  };
 
   return (
     <CartProvider>

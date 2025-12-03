@@ -2,8 +2,7 @@ import React from "react";
 import "./Sidebar.css";
 import { NavLink } from "react-router-dom";
 
-
-const Sidebar = () => {
+const Sidebar = ({ onLogout }) => {
     return (
         <aside className="sidebar">
             <h2 className="sidebar__title">Admin Panel</h2>

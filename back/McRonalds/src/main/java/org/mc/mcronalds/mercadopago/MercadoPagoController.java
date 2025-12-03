@@ -7,12 +7,14 @@ import org.mc.mcronalds.model.PaymentStatus;
 import org.mc.mcronalds.repository.PaymentRepository;
 import org.mc.mcronalds.repository.OrderRepository;
 import org.mc.mcronalds.model.Order;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -378,6 +380,41 @@ public class MercadoPagoController {
                     "error", "Payment approval error",
                     "message", e.getMessage()
             ));
+        }
+    }
+
+    @PostMapping("/create-preference")
+    public ResponseEntity<?> createRealPreference(@RequestBody List<Map<String, Object>> cartItems) {
+        try {
+            MercadoPreferenceRequest request = new MercadoPreferenceRequest();
+            request.setId("ORDER-" + System.currentTimeMillis());
+            request.setTitle("Pedido Online McRonalds");
+            request.setDescription("Compra web de " + cartItems.size() + " productos");
+            request.setCurrencyId("PEN");
+            request.setQuantity(1);
+            
+            // Calcular el total real sumando (precio * cantidad) de cada item del carrito
+            double total = cartItems.stream()
+                .mapToDouble(item -> {
+                    double price = Double.parseDouble(item.get("price").toString());
+                    int quantity = Integer.parseInt(item.get("quantity").toString());
+                    return price * quantity;
+                })
+                .sum();
+            
+            request.setUnitPrice(new BigDecimal(total));
+
+            // Llamar al servicio de MercadoPago
+            Preference preference = mercadoPagoService.createPreference(request);
+            
+            // Devolver los IDs para que el Frontend muestre el botón
+            return ResponseEntity.ok(Map.of(
+                "preference_id", preference.getId(),
+                "init_point", preference.getInitPoint(), 
+                "sandbox_init_point", preference.getSandboxInitPoint()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
