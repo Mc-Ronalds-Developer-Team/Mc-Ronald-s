@@ -1,59 +1,67 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import "./App.css";
-
-import Header from "./components/Header/Header";
-import Navbar from "./components/Navbar/Navbar";
-import Combos from "./pages/Combos/Combos";
-
-import Sidebar from "./pages/Admin/Sidebar/Sidebar";
-import Login from "./pages/Login/Login";
-
-import { CartProvider } from "./context/CartContext";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Navbar from './components/Navbar/Navbar';
+import Header from './components/Header/Header';
+import Combos from './pages/Combos/Combos';
+import Login from './pages/Login/Login';
+import LayoutAdmin from './pages/Admin/LayoutAdmin';
+import { CartProvider } from './context/CartContext';
+import './App.css';
 
 function App() {
-  const [role, setRole] = useState(null);
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+
+  const handleLogin = (role) => {
+    setUserRole(role);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userRole");
+    setUserRole(null);
+  };
+
+  const ProtectedAdminRoute = ({ children }) => {
+    if (userRole !== "ADMIN") {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
+  };
 
   return (
     <CartProvider>
-      <Routes>
-
-        {/* VISTAS DEL CLIENTE */}
-        <Route
-          path="/"
-          element={
-            <div className="flex">
-              <Header className="flex-item header" />
-              <Navbar className="flex-item navbar" />
+      <BrowserRouter>
+        <div className="App">
+          <Routes>
+            {/* Rutas Públicas */}
+            <Route path="/" element={
+              
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <div className="flex">
               <Combos className="flex-item combos" />
-            </div>
-          }
-        />
-
-        {/* LOGIN */}
-        <Route
-          path="/login"
-          element={<Login onLogin={(r) => setRole(r)} />}
-        />
-
-        {/* ADMIN */}
-        <Route
-          path="/admin/*"
-          element={
-            role === "ADMIN" ? (
-              <div className="admin-layout">
-                <Sidebar />
-                <div className="admin-content">
-                  <h1>Bienvenido Admin</h1>
-                </div>
               </div>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
+              </>
+            } />
 
-      </Routes>
+            <Route path="/combos" element={
+              <>
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Combos />
+              </>
+            } />
+
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+            {/* Rutas Privadas de Admin */}
+            <Route path="/admin/*" element={
+              <ProtectedAdminRoute>
+                <LayoutAdmin onLogout={handleLogout} />
+              </ProtectedAdminRoute>
+            } />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </CartProvider>
   );
 }
