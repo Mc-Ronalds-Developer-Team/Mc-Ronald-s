@@ -9,7 +9,7 @@ const Login = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const apiUrl = window.location.hostname === "localhost" ? "http://localhost:9090" : "https://mc-ronald-s-1.onrender.com";
+        const apiUrl = "https://mc-ronald-s-1.onrender.com";
 
         try {
             const response = await fetch(`${apiUrl}/api/auth/login`, {
