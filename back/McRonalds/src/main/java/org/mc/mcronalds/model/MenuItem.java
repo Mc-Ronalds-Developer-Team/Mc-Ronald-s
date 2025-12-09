@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name="menu_item")
+@Table(name = "menu_item")
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,8 +26,11 @@ public class MenuItem {
 
     private String description;
 
-    @Column(precision = 10,scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal price;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal previousPrice;
 
     private String imageUrl;
 

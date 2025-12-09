@@ -1,78 +1,137 @@
 /* Layout general */
 .admin-layout {
   display: flex;
+  background-color: #f4f6f9;
+  /* Fondo gris claro moderno */
+  min-height: 100vh;
 }
 
-/* Contenido del panel, separado del sidebar */
+/* Contenido del panel */
 .admin-content {
-  margin-left: 250px; /* ancho del sidebar */
-  padding: 30px;
-  width: calc(100% - 250px);
+  /* El margin-left se maneja en el layout inline, pero aquí aseguramos el padding */
+  padding: 40px;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .admin-title {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 700;
+  border-bottom: 3px solid #ffbc0d;
+  /* Línea decorativa amarilla McRonalds */
+  display: inline-block;
+  padding-bottom: 5px;
 }
 
-/* Botón crear */
+/* Botón crear (Estilo Premium) */
 .btn-crear {
-  background-color: #e5133a;
+  background: linear-gradient(135deg, #e5133a, #c90f32);
   color: #fff;
   border: none;
-  padding: 10px 18px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 20px;
-  font-weight: bold;
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(229, 19, 58, 0.3);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-crear:hover {
-  background-color: #c90f32;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(229, 19, 58, 0.4);
+  background: linear-gradient(135deg, #ff1744, #d50000);
 }
 
-/* Tabla */
+/* Container de la tabla con sombra y bordes redondeados */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  /* Para que el border-radius corte las filas */
+}
+
+/* Tabla Estilizada */
 .tabla-productos {
   width: 100%;
   border-collapse: collapse;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.tabla-productos thead {
+  background-color: #2c2c2c;
+  /* Cabecera oscura premium */
+  color: #ffffff;
 }
 
 .tabla-productos th,
 .tabla-productos td {
-  border: 1px solid #ddd;
-  padding: 12px;
+  padding: 15px 20px;
   text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 .tabla-productos th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
-/* Botones accion */
-.btn-editar {
-  background-color: #1a73e8;
-  color: #fff;
+.tabla-productos tr:last-of-type border-bottom {
+  border-bottom: 2px solid #e5133a;
+}
+
+.tabla-productos tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.tabla-productos tbody tr:hover {
+  background-color: #fff8e1;
+  /* Sutil amarillo al pasar el mouse */
+}
+
+/* Botones de Acción */
+.btn-editar,
+.btn-eliminar {
+  padding: 8px 16px;
   border: none;
-  padding: 6px 12px;
-  margin-right: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  margin-right: 8px;
+}
+
+.btn-editar {
+  background-color: transparent;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
 }
 
 .btn-editar:hover {
-  background-color: #125fc7;
+  background-color: #e8f0fe;
+  transform: scale(1.05);
 }
 
 .btn-eliminar {
-  background-color: #d32f2f;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
+  background-color: transparent;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
 }
 
 .btn-eliminar:hover {
-  background-color: #b51f1f;
+  background-color: #ffebee;
+  transform: scale(1.05);
 }

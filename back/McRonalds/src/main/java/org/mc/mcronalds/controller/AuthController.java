@@ -35,10 +35,10 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
             String role = authentication.getAuthorities().iterator().next().getAuthority();
-            return ResponseEntity.ok(new LoginResponse("Login exitoso", role));
+            // Obtener el usuario completo para sacar el ID
+            User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+            return ResponseEntity.ok(new LoginResponse("Login exitoso", role, user.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Credenciales inválidas");
         }
@@ -64,32 +64,67 @@ public class AuthController {
 class LoginRequest {
     private String username;
     private String password;
-    
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
 class RegisterRequest {
     private String username;
     private String password;
+
     // Getters y Setters
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
 
 class LoginResponse {
     private String message;
     private String role;
+    private Long userId;
 
-    public LoginResponse(String message, String role) {
+    public LoginResponse(String message, String role, Long userId) {
         this.message = message;
         this.role = role;
+        this.userId = userId;
     }
+
     // Getters
-    public String getMessage() { return message; }
-    public String getRole() { return role; }
+    public String getMessage() {
+        return message;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
 }

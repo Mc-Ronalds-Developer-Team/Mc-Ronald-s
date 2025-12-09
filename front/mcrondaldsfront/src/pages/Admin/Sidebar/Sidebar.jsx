@@ -9,8 +9,18 @@ const Sidebar = ({ onLogout }) => {
 
             <ul className="sidebar__menu">
                 <li>
-                    <NavLink to="/admin/productos" className={({ isActive }) => isActive ? "sidebar__link active" : "sidebar__link"}>
-                        Productos
+                    <NavLink to="/admin/combos" className={({ isActive }) => isActive ? "sidebar__link active" : "sidebar__link"}>
+                        Combos
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/admin/hamburguesas" className={({ isActive }) => isActive ? "sidebar__link active" : "sidebar__link"}>
+                        Hamburguesas
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/admin/bebidas" className={({ isActive }) => isActive ? "sidebar__link active" : "sidebar__link"}>
+                        Bebidas
                     </NavLink>
                 </li>
 
@@ -27,8 +37,8 @@ const Sidebar = ({ onLogout }) => {
                 </li>
 
                 <li style={{ marginTop: "20px", borderTop: "1px solid rgba(255,255,255,0.2)", paddingTop: "10px" }}>
-                    <button 
-                        onClick={onLogout} 
+                    <button
+                        onClick={onLogout}
                         className="sidebar__link"
                         style={{ background: "transparent", border: "none", cursor: "pointer", width: "100%", textAlign: "left" }}
                     >
@@ -36,7 +46,7 @@ const Sidebar = ({ onLogout }) => {
                     </button>
                 </li>
             </ul>
-        </aside>
+        </aside >
     );
 };
 

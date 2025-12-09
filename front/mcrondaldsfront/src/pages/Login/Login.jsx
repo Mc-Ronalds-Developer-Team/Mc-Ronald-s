@@ -9,7 +9,7 @@ const Login = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const apiUrl = window.location.hostname === "localhost" ? "http://localhost:8080" : "https://mc-ronald-s-1.onrender.com";
+        const apiUrl = window.location.hostname === "localhost" ? "http://localhost:9090" : "https://mc-ronald-s-1.onrender.com";
 
         try {
             const response = await fetch(`${apiUrl}/api/auth/login`, {
@@ -25,13 +25,16 @@ const Login = ({ onLogin }) => {
 
             const data = await response.json();
             localStorage.setItem("userRole", data.role);
+            if (data.userId) {
+                localStorage.setItem("userId", data.userId);
+            }
             onLogin(data.role);
 
             // Redirección basada en rol
-            if (data.role === "ADMIN") {
+            if (data.role === "ROLE_ADMIN") {
                 navigate("/admin");
             } else {
-                navigate("/menu");
+                navigate("/");
             }
 
         } catch (error) {
@@ -52,9 +55,7 @@ const Login = ({ onLogin }) => {
                     <input type="password" required value={pass} onChange={(e) => setPass(e.target.value)} placeholder="Contraseña" />
                 </div>
                 <button type="submit" className="btn-login">Iniciar Sesión</button>
-                <p className="register-link" style={{ marginTop: "15px", color: "white" }}>
-                    ¿No tienes cuenta? <span onClick={() => navigate("/register")} style={{ cursor: "pointer", fontWeight: "bold", textDecoration: "underline" }}>Regístrate aquí</span>
-                </p>
+
             </form>
         </div>
     );

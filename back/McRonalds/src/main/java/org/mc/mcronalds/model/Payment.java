@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="payment")
+@Table(name = "payment")
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class Payment {
 
     private LocalDateTime paymentDate;
 
-    @Column(precision = 10,scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal amount;
 
     private String paymentMethod;
@@ -33,9 +33,9 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "idOrder")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Order order;
 
     private String transactionId;
-
 
 }

@@ -23,18 +23,13 @@ const Navbar = ({ onLogout, userRole }) => {
                             Bebidas
                         </NavLink>
                     </li>
-                    
-                    {userRole && (
-                        <li className="list__item">
-                            <button 
-                                onClick={onLogout} 
-                                className="list__link" 
-                                style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", font: "inherit" }}
-                            >
-                                Cerrar Sesión
-                            </button>
-                        </li>
-                    )}
+
+                    {/* Botón Siguiente / Mi Pedido */}
+                    <li className="list__item">
+                        <NavLink to="/carrito" className={({ isActive }) => isActive ? "list__link active" : "list__link"} style={{ color: "#da291c", borderColor: "#da291c", fontWeight: "800" }}>
+                            🛒 Mi Pedido
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
         </nav>

@@ -22,7 +22,7 @@ public class OrderController {
 
     @Autowired
     private OrderRepository orderRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -44,32 +44,37 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody Order order) {
         try {
-            // Validaciones básicas
-            if (order.getUser() == null || order.getUser().getId() == null) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "El usuario es requerido");
-                return ResponseEntity.badRequest().body(error);
+            // 1. Validaciones básicas y Asignación de Usuario
+            User orderUser = null;
+
+            // Si viene usuario, verificarlo
+            if (order.getUser() != null && order.getUser().getId() != null) {
+                Optional<User> userOpt = userRepository.findById(order.getUser().getId());
+                if (userOpt.isEmpty()) {
+                    return ResponseEntity.badRequest().body(Map.of("error", "El usuario especificado no existe"));
+                }
+                orderUser = userOpt.get();
+            } else {
+                // SI NO VIENE USUARIO -> Asignar Usuario Invitado (Kiosko)
+                Optional<User> guestOpt = userRepository.findByUsername("user@guest.com");
+                if (guestOpt.isPresent()) {
+                    orderUser = guestOpt.get();
+                } else {
+                    // Fallback extremo si no corrió el DataInitializer
+                    return ResponseEntity.badRequest()
+                            .body(Map.of("error", "Usuario invitado no configurado en backend"));
+                }
             }
-            
+
             if (order.getTotalAmount() == null || order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "El monto total debe ser mayor a 0");
-                return ResponseEntity.badRequest().body(error);
+                return ResponseEntity.badRequest().body(Map.of("error", "El monto total debe ser mayor a 0"));
             }
-            
-            // Verificar que el usuario existe
-            Optional<User> userOpt = userRepository.findById(order.getUser().getId());
-            if (userOpt.isEmpty()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "El usuario especificado no existe");
-                return ResponseEntity.badRequest().body(error);
-            }
-            
-            // Establecer valores por defecto
-            order.setUser(userOpt.get());
+
+            // Establecer valores
+            order.setUser(orderUser);
             order.setOrderDate(LocalDateTime.now());
             order.setStatus(OrderStatus.PENDING);
-            
+
             Order savedOrder = orderRepository.save(order);
             return ResponseEntity.ok(savedOrder);
         } catch (Exception e) {
@@ -103,9 +108,9 @@ public class OrderController {
             if (orderOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             Order order = orderOpt.get();
-            
+
             // Solo permitir eliminar órdenes pendientes
             if (order.getStatus() != OrderStatus.PENDING) {
                 Map<String, String> error = new HashMap<>();
@@ -113,7 +118,7 @@ public class OrderController {
                 error.put("current_status", order.getStatus().toString());
                 return ResponseEntity.badRequest().body(error);
             }
-            
+
             orderRepository.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
@@ -123,7 +128,7 @@ public class OrderController {
             return ResponseEntity.status(500).body(error);
         }
     }
-    
+
     // Obtener órdenes por usuario
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getOrdersByUser(@PathVariable Long userId) {
@@ -132,7 +137,7 @@ public class OrderController {
             if (userOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             List<Order> orders = orderRepository.findByUser(userOpt.get());
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
@@ -142,14 +147,14 @@ public class OrderController {
             return ResponseEntity.status(500).body(error);
         }
     }
-    
+
     // Obtener órdenes por estado
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
         List<Order> orders = orderRepository.findByStatus(status);
         return ResponseEntity.ok(orders);
     }
-    
+
     // Actualizar estado de orden
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> statusUpdate) {
@@ -158,25 +163,26 @@ public class OrderController {
             if (orderOpt.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             Order order = orderOpt.get();
             String newStatusStr = statusUpdate.get("status");
-            
+
             try {
                 OrderStatus newStatus = OrderStatus.valueOf(newStatusStr.toUpperCase());
                 order.setStatus(newStatus);
-                
+
                 // Actualizar tiempo real si se está completando
                 if (newStatus == OrderStatus.CONFIRMED) {
-                    order.setActualTime(System.currentTimeMillis() - order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli());
+                    order.setActualTime(System.currentTimeMillis()
+                            - order.getOrderDate().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli());
                 }
-                
+
                 Order savedOrder = orderRepository.save(order);
-                
+
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Estado de orden actualizado correctamente");
                 response.put("order", savedOrder);
-                
+
                 return ResponseEntity.ok(response);
             } catch (IllegalArgumentException e) {
                 Map<String, String> error = new HashMap<>();
@@ -191,14 +197,14 @@ public class OrderController {
             return ResponseEntity.status(500).body(error);
         }
     }
-    
+
     // Obtener órdenes por rango de fechas
     @GetMapping("/date-range")
     public ResponseEntity<?> getOrdersByDateRange(@RequestParam String startDate, @RequestParam String endDate) {
         try {
             LocalDateTime start = LocalDateTime.parse(startDate);
             LocalDateTime end = LocalDateTime.parse(endDate);
-            
+
             List<Order> orders = orderRepository.findByOrderDateBetween(start, end);
             return ResponseEntity.ok(orders);
         } catch (Exception e) {

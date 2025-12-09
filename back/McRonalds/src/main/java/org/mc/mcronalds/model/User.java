@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Data
 @Builder
 @NoArgsConstructor
@@ -37,9 +37,11 @@ public class User {
     private LocalDateTime lastLogin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Sale> sales;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Order> orders;
 
 }

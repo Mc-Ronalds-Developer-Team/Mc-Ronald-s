@@ -24,14 +24,18 @@ public class SecurityConfigUsers {
     @Bean
     public SecurityFilterChain userSecurity(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/auth/**", "/admin/**")
+                .securityMatcher("/api/**")
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/menu-items/**",
+                                "/api/menu-categories/**")
+                        .permitAll()
+                        // Permitir MercadoPago y Creación de Ordenes (Kiosko Mode)
+                        .requestMatchers("/api/mercadopago/**", "/api/orders/**").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(customizer -> customizer.disable())
-                .formLogin(form -> form.disable());
+                .httpBasic(org.springframework.security.config.Customizer.withDefaults()); // Enable Basic Auth
 
         return http.build();
     }
@@ -41,7 +45,7 @@ public class SecurityConfigUsers {
         CorsConfiguration configuration = new CorsConfiguration();
         // IMPORTANTE: Aquí pon la URL real de tu Frontend en Render
         // Si quieres probar rápido (pero inseguro) usa "*" en lugar de la URL
-        configuration.setAllowedOrigins(List.of("https://mc-ronald-s-frontend.onrender.com", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
