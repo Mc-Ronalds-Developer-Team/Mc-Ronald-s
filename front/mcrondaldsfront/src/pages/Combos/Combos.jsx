@@ -38,7 +38,7 @@ const Combos = () => {
             <div className="container mx-auto px-4">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-center text-brand-dark mb-12 uppercase tracking-wide relative inline-block w-full">
                     <span className="relative z-10">Nuestros Combos</span>
-                    <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-brand-yellow rounded"></span>
+                    <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-brand-yellow rounded"></span>
                 </h1>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

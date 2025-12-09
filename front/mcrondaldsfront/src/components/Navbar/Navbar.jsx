@@ -14,25 +14,25 @@ const Navbar = ({ onLogout, userRole }) => {
         <nav className="bg-white shadow-md sticky top-[64px] z-40 w-full border-t border-gray-100">
             <div className="container mx-auto px-4">
                 {/* Changed to flex-nowrap to enforce single row */}
-                <ul className="flex flex-row flex-nowrap justify-center items-stretch list-none m-0 h-16 overflow-x-auto">
-                    <li className="flex-shrink-0">
+                <ul className="flex flex-row flex-nowrap justify-center items-center list-none m-0 h-16 overflow-x-auto">
+                    <li className="flex-shrink-0 h-full flex items-center">
                         <NavLink to="/combos" className={linkClasses}>
                             Combos
                         </NavLink>
                     </li>
-                    <li className="flex-shrink-0">
+                    <li className="flex-shrink-0 h-full flex items-center">
                         <NavLink to="/hamburguesas" className={linkClasses}>
                             Hamburguesas
                         </NavLink>
                     </li>
-                    <li className="flex-shrink-0">
+                    <li className="flex-shrink-0 h-full flex items-center">
                         <NavLink to="/bebidas" className={linkClasses}>
                             Bebidas
                         </NavLink>
                     </li>
 
                     {/* Botón Siguiente / Mi Pedido */}
-                    <li className="ml-8 flex items-center flex-shrink-0">
+                    <li className="ml-8 flex-shrink-0 h-full flex items-center">
                         <NavLink
                             to="/carrito"
                             className={({ isActive }) =>
