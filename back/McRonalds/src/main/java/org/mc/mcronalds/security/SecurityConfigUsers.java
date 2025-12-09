@@ -45,7 +45,7 @@ public class SecurityConfigUsers {
         CorsConfiguration configuration = new CorsConfiguration();
         // IMPORTANTE: Aquí pon la URL real de tu Frontend en Render
         // Si quieres probar rápido (pero inseguro) usa "*" en lugar de la URL
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("https://mc-ronald-s-frontend.onrender.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
