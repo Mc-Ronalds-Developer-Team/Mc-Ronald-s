@@ -14,7 +14,7 @@ const Navbar = ({ onLogout, userRole }) => {
         <nav className="bg-white shadow-md sticky top-[64px] z-40 w-full border-t border-gray-100">
             <div className="container mx-auto px-4">
                 {/* Changed to flex-nowrap to enforce single row */}
-                <ul className="flex flex-row flex-nowrap justify-center items-center list-none m-0 h-16 overflow-x-auto">
+                <ul className="flex flex-row flex-nowrap justify-center items-center list-none m-0 h-16 overflow-x-auto gap-2">
                     <li className="flex-shrink-0 h-full flex items-center">
                         <NavLink to="/combos" className={linkClasses}>
                             Combos
@@ -36,7 +36,7 @@ const Navbar = ({ onLogout, userRole }) => {
                         <NavLink
                             to="/carrito"
                             className={({ isActive }) =>
-                                `flex items-center gap-2 px-6 py-2 rounded-full font-extrabold text-white transition-transform transform hover:scale-105 shadow-md ${isActive ? "bg-brand-red ring-4 ring-brand-yellow" : "bg-brand-red hover:bg-red-700"
+                                `flex items-center justify-center gap-2 px-6 py-2 rounded-full font-extrabold text-white transition-all transform hover:scale-105 shadow-md ${isActive ? "bg-brand-red ring-4 ring-brand-yellow" : "bg-brand-red hover:bg-red-700"
                                 }`
                             }
                         >
