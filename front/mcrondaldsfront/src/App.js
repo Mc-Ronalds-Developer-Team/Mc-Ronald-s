@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer'; // Import Footer
 import Combos from './pages/Combos/Combos';
 import Hamburguesas from './pages/Hamburguesas/Hamburguesas';
 import Bebidas from './pages/Bebidas/Bebidas';
@@ -39,13 +40,14 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        <div className="App">
+        <div className="App flex flex-col min-h-screen">
           <Routes>
             <Route path="/" element={
               <>
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Combos />
+                <Footer />
               </>
             } />
 
@@ -54,6 +56,7 @@ function App() {
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Hamburguesas />
+                <Footer />
               </>
             } />
 
@@ -62,6 +65,7 @@ function App() {
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Bebidas />
+                <Footer />
               </>
             } />
 
@@ -74,6 +78,7 @@ function App() {
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Combos />
+                <Footer />
               </>
             } />
 
@@ -82,6 +87,7 @@ function App() {
                 <Header />
                 <Navbar onLogout={handleLogout} userRole={userRole} />
                 <Carrito />
+                <Footer />
               </>
             } />
 
