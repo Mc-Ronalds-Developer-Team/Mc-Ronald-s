@@ -3,24 +3,24 @@
 ## ✅ **Mejoras Implementadas**
 
 ### **1. Logging Profesional**
-- ✅ Reemplazado `System.out.println` con `Logger` de SLF4J
-- ✅ Logs estructurados con niveles apropiados (INFO, WARN, ERROR, DEBUG)
-- ✅ Mensajes en inglés para consistencia
-- ✅ Logging de excepciones con stack traces
+-  Reemplazado `System.out.println` con `Logger` de SLF4J
+-  Logs estructurados con niveles apropiados (INFO, WARN, ERROR, DEBUG)
+-  Mensajes en inglés para consistencia
+-  Logging de excepciones con stack traces
 
 ### **2. Código Limpio**
-- ✅ Eliminados comentarios innecesarios
-- ✅ Métodos extraídos para mejor legibilidad
-- ✅ Manejo de errores mejorado
-- ✅ Código más mantenible y profesional
+-  Eliminados comentarios innecesarios
+-  Métodos extraídos para mejor legibilidad
+-  Manejo de errores mejorado
+-  Código más mantenible y profesional
 
 ### **3. Estructura Mejorada**
-- ✅ Separación de responsabilidades
-- ✅ Métodos privados para funcionalidad específica
-- ✅ Switch expressions modernas (Java 14+)
-- ✅ Optional handling mejorado
+-  Separación de responsabilidades
+-  Métodos privados para funcionalidad específica
+-  Switch expressions modernas (Java 14+)
+-  Optional handling mejorado
 
-## 📋 **Endpoints Disponibles**
+##  **Endpoints Disponibles**
 
 ### **Endpoints Principales:**
 | Método | Endpoint | Descripción |
@@ -39,7 +39,7 @@
 | `POST` | `/api/mercadopago/test-payment/{id}` | Procesar pago manualmente |
 | `DELETE` | `/api/mercadopago/cleanup` | Limpiar pagos antiguos |
 
-## 🔧 **Configuración de Logging**
+##  **Configuración de Logging**
 
 ### **application.properties:**
 ```properties
@@ -55,7 +55,7 @@ logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
 - **ERROR**: Errores que requieren atención
 - **DEBUG**: Información detallada para debugging
 
-## 🚀 **Flujo de Producción**
+##  **Flujo de Producción**
 
 ### **1. Crear Preferencia:**
 ```http
@@ -77,7 +77,7 @@ POST /api/payments/create-preference/{orderId}
 GET /api/mercadopago/status
 ```
 
-## 🔍 **Monitoreo y Debugging**
+##  **Monitoreo y Debugging**
 
 ### **Logs Importantes:**
 ```
@@ -94,7 +94,7 @@ ERROR - MercadoPago API error: Invalid token
 ERROR - Payment not found in database for external_reference: 123
 ```
 
-## 🛠️ **Mantenimiento**
+##  **Mantenimiento**
 
 ### **Limpieza Automática:**
 ```http
@@ -110,7 +110,7 @@ POST /api/mercadopago/approve-all-pending
 - Aprobar todos los pagos pendientes manualmente
 - Útil cuando los webhooks fallan
 
-## 📊 **Métricas y Monitoreo**
+##  **Métricas y Monitoreo**
 
 ### **Estados de Pago:**
 - `PENDING`: Pago creado, esperando confirmación
@@ -124,21 +124,21 @@ POST /api/mercadopago/approve-all-pending
 - `CONFIRMED`: Orden confirmada (pago aprobado)
 - `CANCELLED`: Orden cancelada
 
-## 🔒 **Seguridad**
+##  **Seguridad**
 
 ### **Validaciones:**
-- ✅ Validación de external_reference
-- ✅ Verificación de estados de pago
-- ✅ Manejo seguro de excepciones
-- ✅ Logging sin información sensible
+-  Validación de external_reference
+-  Verificación de estados de pago
+-  Manejo seguro de excepciones
+-  Logging sin información sensible
 
 ### **Buenas Prácticas:**
-- ✅ No exponer información sensible en logs
-- ✅ Validar todos los inputs
-- ✅ Manejar errores graciosamente
-- ✅ Usar HTTPS en producción
+-  No exponer información sensible en logs
+-  Validar todos los inputs
+-  Manejar errores graciosamente
+-  Usar HTTPS en producción
 
-## 🎯 **Próximos Pasos**
+##  **Próximos Pasos**
 
 ### **Para Producción:**
 1. **Configurar URLs reales** (no localhost)
