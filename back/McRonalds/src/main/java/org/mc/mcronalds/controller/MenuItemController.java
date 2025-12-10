@@ -147,6 +147,7 @@ public class MenuItemController {
             item.setName(updatedItem.getName());
             item.setDescription(updatedItem.getDescription());
             item.setPrice(updatedItem.getPrice());
+            item.setPreviousPrice(updatedItem.getPreviousPrice());
             item.setImageUrl(updatedItem.getImageUrl());
             item.setPreparationTime(updatedItem.getPreparationTime());
             item.setCategory(category.get()); // Usar la categoría completa cargada

@@ -1,6 +1,7 @@
 package org.mc.mcronalds.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,9 @@ public class MenuItem {
     @Column(precision = 10,scale = 2)
     private BigDecimal price;
 
+    @Column(name = "previous_price", precision = 10, scale = 2)
+
+    private BigDecimal previousPrice;
     private String imageUrl;
 
     private Long preparationTime;
