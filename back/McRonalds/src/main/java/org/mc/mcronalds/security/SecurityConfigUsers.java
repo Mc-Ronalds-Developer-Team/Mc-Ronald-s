@@ -43,9 +43,8 @@ public class SecurityConfigUsers {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // IMPORTANTE: Aquí pon la URL real de tu Frontend en Render
-        // configuration.setAllowedOrigins(List.of("https://mc-ronald-s.onrender.com"));
-        configuration.setAllowedOrigins(List.of("https://mc-ronald-s-frontend.onrender.com"));
+        // Permitiendo cualquier origen para evitar problemas de CORS
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
