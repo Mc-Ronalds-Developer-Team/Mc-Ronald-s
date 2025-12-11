@@ -1,17 +1,16 @@
 import React from "react";
-import "./Header.css";
+// import "./Header.css";
 
 const Header = () => {
     return (
-        <header className="header">
-        <div className="container-header">
-            <div className="header-item-first">
-                <img src="https://1000marcas.net/wp-content/uploads/2019/11/McDonalds-Logo-2003.jpg" className="img"></img>
+        <header className="w-full bg-brand-red shadow-lg sticky top-0 z-50 transition-all duration-300">
+            <div className="container mx-auto flex items-center justify-center h-14">
+                <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/3/36/McDonald%27s_Golden_Arches.svg"
+                    alt="McRonalds Logo"
+                    className="h-10 w-auto object-contain filter drop-shadow-md hover:scale-110 transition-transform duration-300"
+                />
             </div>
-            <h1 className="header-title">
-                ¡BIENVENIDO A MC RONALD'S!
-            </h1>
-        </div>
         </header>
     );
 };

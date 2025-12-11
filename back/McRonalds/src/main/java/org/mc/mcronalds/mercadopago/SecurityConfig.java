@@ -6,32 +6,36 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+// DESHABILITADO POR CONFLICTO CON SecurityConfigUsers.java
+// @Configuration
 public class SecurityConfig {
 
-    // =======================
-    // CONFIG MERCADOPAGO
-    // =======================
+        // =======================
+        // CONFIG MERCADOPAGO
+        // =======================
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http
-                .securityMatcher("/api/mercadopago/**")  
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/mercadopago/webhook",
-                                "/api/mercadopago/preference",
-                                "/api/mercadopago/success",
-                                "/api/mercadopago/failure",
-                                "/api/mercadopago/pending"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(Customizer.withDefaults());
-
-        return http.build();
-    }
+        /*
+         * @Bean
+         * public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+         * 
+         * http
+         * .securityMatcher("/api/mercadopago/**")
+         * .csrf(csrf -> csrf.disable())
+         * .authorizeHttpRequests(auth -> auth
+         * .requestMatchers(
+         * "/api/mercadopago/webhook",
+         * "/api/mercadopago/preference",
+         * "/api/mercadopago/success",
+         * "/api/mercadopago/failure",
+         * "/api/mercadopago/pending",
+         * "/api/mercadopago/test",
+         * "/api/mercadopago"
+         * ).permitAll()
+         * .anyRequest().authenticated()
+         * )
+         * .httpBasic(Customizer.withDefaults());
+         * 
+         * return http.build();
+         * }
+         */
 }
-

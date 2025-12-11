@@ -1,0 +1,93 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #db0007 0%, #ffc72c 100%); /* Colores McRonald's */
+  background-size: cover;
+}
+
+/* La caja blanca del formulario */
+.login-box {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Título (Bienvenido / Crear Cuenta) */
+.login-title {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Grupos de inputs */
+.input-group {
+  width: 100%;
+  text-align: left;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box; /* Para que el padding no rompa el ancho */
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #ffc72c; /* Amarillo al escribir */
+}
+
+/* Botón de acción */
+.btn-login {
+  background-color: #db0007; /* Rojo McRonald's */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  width: 100%;
+}
+
+.btn-login:hover {
+  background-color: #b30006; /* Rojo más oscuro */
+  transform: scale(1.02);
+}
+
+.btn-login:active {
+  transform: scale(0.98);
+}
+
+/* Enlaces de texto (Regístrate aquí) */
+.register-link {
+  font-size: 0.9rem;
+  color: #666 !important; /* Forzamos color gris, no blanco */
+  margin-top: 1rem;
+}
+
+.register-link span {
+  color: #db0007;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.register-link span:hover {
+  text-decoration: underline;
+}

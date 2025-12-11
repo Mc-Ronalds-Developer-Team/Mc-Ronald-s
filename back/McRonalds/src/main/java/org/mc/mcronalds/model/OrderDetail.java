@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="order_detail")
+@Table(name = "order_detail")
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,16 +22,17 @@ public class OrderDetail {
 
     private Long quantity;
 
-    @Column(precision = 10,scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @Column(precision = 10,scale = 2)
+    @Column(precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     private String notes;
 
     @ManyToOne
     @JoinColumn(name = "idOrder")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Order order;
 
     @ManyToOne

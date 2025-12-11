@@ -1,59 +1,112 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import "./App.css";
-
-import Header from "./components/Header/Header";
-import Navbar from "./components/Navbar/Navbar";
-import Combos from "./pages/Combos/Combos";
-
-import Sidebar from "./pages/Admin/Sidebar/Sidebar";
-import Login from "./pages/Login/Login";
-
-import { CartProvider } from "./context/CartContext";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import Navbar from './components/Navbar/Navbar';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer'; // Import Footer
+import Combos from './pages/Combos/Combos';
+import Hamburguesas from './pages/Hamburguesas/Hamburguesas';
+import Bebidas from './pages/Bebidas/Bebidas';
+import Login from './pages/Login/Login';
+import LayoutAdmin from './pages/Admin/LayoutAdmin';
+import TablaCombos from './pages/Admin/Productos/TablaCombos';
+import TablaHamburguesas from './pages/Admin/Productos/TablaHamburguesas';
+import TablaBebidas from './pages/Admin/Productos/TablaBebidas';
+import Usuarios from './pages/Admin/Usuarios/Usuarios';
+import Pedidos from './pages/Admin/Pedidos/Pedidos';
+import Carrito from './pages/Carrito/Carrito';
+import { CartProvider } from './context/CartContext';
+import './App.css';
 
 function App() {
-  const [role, setRole] = useState(null);
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+
+  const handleLogin = (role) => setUserRole(role);
+  const handleLogout = () => {
+    localStorage.removeItem("userRole");
+    setUserRole(null);
+  };
+
+  // Componente para proteger rutas (Si no estás logueado, te manda al Login)
+  const ProtectedRoute = ({ children }) => {
+    if (!userRole) return <Navigate to="/" replace />;
+    return children;
+  };
+
+  const ProtectedAdminRoute = ({ children }) => {
+    if (userRole !== "ROLE_ADMIN") return <Navigate to="/" replace />;
+    return children;
+  };
 
   return (
     <CartProvider>
-      <Routes>
+      <BrowserRouter>
+        <div className="App flex flex-col min-h-screen">
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Combos />
+                <Footer />
+              </>
+            } />
 
-        {/* VISTAS DEL CLIENTE */}
-        <Route
-          path="/"
-          element={
-            <div className="flex">
-              <Header className="flex-item header" />
-              <Navbar className="flex-item navbar" />
-              <Combos className="flex-item combos" />
-            </div>
-          }
-        />
+            <Route path="/hamburguesas" element={
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Hamburguesas />
+                <Footer />
+              </>
+            } />
 
-        {/* LOGIN */}
-        <Route
-          path="/login"
-          element={<Login onLogin={(r) => setRole(r)} />}
-        />
+            <Route path="/bebidas" element={
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Bebidas />
+                <Footer />
+              </>
+            } />
 
-        {/* ADMIN */}
-        <Route
-          path="/admin/*"
-          element={
-            role === "ADMIN" ? (
-              <div className="admin-layout">
-                <Sidebar />
-                <div className="admin-content">
-                  <h1>Bienvenido Admin</h1>
-                </div>
-              </div>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
+            <Route path="/login" element={
+              userRole === "ROLE_ADMIN" ? <Navigate to="/admin" /> : <Login onLogin={handleLogin} />
+            } />
 
-      </Routes>
+            <Route path="/combos" element={
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Combos />
+                <Footer />
+              </>
+            } />
+
+            <Route path="/carrito" element={
+              <>
+                <Header />
+                <Navbar onLogout={handleLogout} userRole={userRole} />
+                <Carrito />
+                <Footer />
+              </>
+            } />
+
+            <Route path="/admin" element={
+              <ProtectedAdminRoute>
+                <LayoutAdmin onLogout={handleLogout} />
+              </ProtectedAdminRoute>
+            }>
+              <Route index element={<TablaCombos />} />
+              <Route path="combos" element={<TablaCombos />} />
+              <Route path="hamburguesas" element={<TablaHamburguesas />} />
+              <Route path="bebidas" element={<TablaBebidas />} />
+              <Route path="usuarios" element={<Usuarios />} />
+              <Route path="pedidos" element={<Pedidos />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </CartProvider>
   );
 }

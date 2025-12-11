@@ -14,7 +14,7 @@
 - **Problema**: URLs de localhost no funcionan con webhooks de MercadoPago
 - **Solución**: Documentación para usar ngrok en desarrollo
 
-## 📋 Flujo Corregido
+##  Flujo Corregido
 
 ### 1. **Crear Preferencia de Pago**
 
@@ -50,9 +50,9 @@ Content-Type: application/json
 ```
 
 **Lo que sucede internamente:**
-1. ✅ Se crea la preferencia en MercadoPago
-2. ✅ Se guarda el registro de `Payment` en BD con estado `PENDING`
-3. ✅ Se retorna la URL para redirigir al usuario
+1.  Se crea la preferencia en MercadoPago
+2.  Se guarda el registro de `Payment` en BD con estado `PENDING`
+3.  Se retorna la URL para redirigir al usuario
 
 ### 2. **Usuario Completa el Pago**
 - Usuario es redirigido a MercadoPago
@@ -65,13 +65,13 @@ POST /api/mercadopago/webhook?type=payment&data_id=1234567890
 ```
 
 **Lo que sucede internamente:**
-1. ✅ MercadoPago envía notificación al webhook
-2. ✅ Se obtiene información del pago desde MercadoPago
-3. ✅ Se busca el pago en BD por `external_reference`
-4. ✅ Se actualiza el estado del pago en BD
-5. ✅ Si el pago es aprobado, se actualiza la orden a `CONFIRMED`
+1.  MercadoPago envía notificación al webhook
+2.  Se obtiene información del pago desde MercadoPago
+3.  Se busca el pago en BD por `external_reference`
+4.  Se actualiza el estado del pago en BD
+5.  Si el pago es aprobado, se actualiza la orden a `CONFIRMED`
 
-## 🛠️ Configuración para Desarrollo
+##  Configuración para Desarrollo
 
 ### 1. **Instalar ngrok**
 ```bash
@@ -115,25 +115,25 @@ mercadopago.notificationUrl=https://abc123.ngrok.io/api/mercadopago/webhook
    - Title: Orden McRonalds #123
    - Amount: 25.50
    - External Reference: 123
-✅ Payment creado en BD con ID: 1 para orden: 123
+ Payment creado en BD con ID: 1 para orden: 123
 ```
 
 #### Al recibir webhook:
 ```
-🔔 Webhook recibido - Type: payment, Data ID: 1234567890
-💳 Procesando notificación de pago: 1234567890
-✅ Pago obtenido de MercadoPago:
+ Webhook recibido - Type: payment, Data ID: 1234567890
+ Procesando notificación de pago: 1234567890
+ Pago obtenido de MercadoPago:
    - ID: 1234567890
    - Status: approved
    - External Reference: 123
    - Amount: 25.50
-✅ Pago encontrado en BD con ID: 1
-🔄 Actualizando estado de PENDING a APPROVED
-✅ Estado de pago actualizado en BD: 1 -> APPROVED
-✅ Orden actualizada a CONFIRMED: 123
+ Pago encontrado en BD con ID: 1
+ Actualizando estado de PENDING a APPROVED
+ Estado de pago actualizado en BD: 1 -> APPROVED
+ Orden actualizada a CONFIRMED: 123
 ```
 
-## 🚨 Solución de Problemas
+##  Solución de Problemas
 
 ### Problema: "No se crea nada en la base de datos"
 **Solución**: Verifica que el endpoint `/api/payments/create-preference/{orderId}` esté funcionando correctamente. Ahora debería crear el registro automáticamente.
@@ -150,7 +150,7 @@ mercadopago.notificationUrl=https://abc123.ngrok.io/api/mercadopago/webhook
 2. Actualiza la URL de notificación en `application.properties`
 3. Verifica que el endpoint `/api/mercadopago/webhook` esté accesible
 
-## 📊 Estados de Pago
+##  Estados de Pago
 
 - `PENDING`: Pago creado, esperando confirmación
 - `IN_PROCESS`: Pago en proceso
@@ -158,7 +158,7 @@ mercadopago.notificationUrl=https://abc123.ngrok.io/api/mercadopago/webhook
 - `REJECTED`: Pago rechazado
 - `CANCELLED`: Pago cancelado
 
-## 🔄 Flujo Completo
+##  Flujo Completo
 
 1. **Frontend** → `POST /api/payments/create-preference/{orderId}`
 2. **Backend** → Crea preferencia en MercadoPago + guarda Payment en BD

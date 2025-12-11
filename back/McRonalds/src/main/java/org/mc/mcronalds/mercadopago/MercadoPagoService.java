@@ -18,23 +18,23 @@ public class MercadoPagoService {
 
     private static final Logger logger = LoggerFactory.getLogger(MercadoPagoService.class);
 
-    @Value("${mercadopago.backurl.success:http://localhost:8080/api/mercadopago/success}")
+    @Value("${mercadopago.backurl.success:https://mc-ronald-s-1.onrender.com/api/mercadopago/success}")
     private String backUrlSuccess;
 
-    @Value("${mercadopago.backurl.failure:http://localhost:8080/api/mercadopago/failure}")
+    @Value("${mercadopago.backurl.failure:https://mc-ronald-s-1.onrender.com/api/mercadopago/failure}")
     private String backUrlFailure;
 
-    @Value("${mercadopago.backurl.pending:http://localhost:8080/api/mercadopago/pending}")
+    @Value("${mercadopago.backurl.pending:https://mc-ronald-s-1.onrender.com/api/mercadopago/pending}")
     private String backUrlPending;
 
-    @Value("${mercadopago.notificationUrl:http://localhost:8080/api/mercadopago/webhook}")
+    @Value("${mercadopago.notificationUrl:https://mc-ronald-s-1.onrender.com/api/mercadopago/webhook}")
     private String notificationUrl;
 
     public Preference createPreference(MercadoPreferenceRequest mercadoPreferenceRequest) throws Exception {
-        logger.info("Creating MercadoPago preference - ID: {}, Title: {}, Amount: {}, Currency: {}", 
-            mercadoPreferenceRequest.getId(), mercadoPreferenceRequest.getTitle(), 
-            mercadoPreferenceRequest.getUnitPrice(), mercadoPreferenceRequest.getCurrencyId());
-        
+        logger.info("Creating MercadoPago preference - ID: {}, Title: {}, Amount: {}, Currency: {}",
+                mercadoPreferenceRequest.getId(), mercadoPreferenceRequest.getTitle(),
+                mercadoPreferenceRequest.getUnitPrice(), mercadoPreferenceRequest.getCurrencyId());
+
         PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
                 .id(mercadoPreferenceRequest.getId())
                 .title(mercadoPreferenceRequest.getTitle())
@@ -45,18 +45,18 @@ public class MercadoPagoService {
                 .currencyId(mercadoPreferenceRequest.getCurrencyId())
                 .unitPrice(mercadoPreferenceRequest.getUnitPrice())
                 .build();
-        
+
         List<PreferenceItemRequest> items = new ArrayList<>();
         items.add(itemRequest);
-        
+
         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
                 .success(backUrlSuccess)
                 .failure(backUrlFailure)
                 .pending(backUrlPending)
                 .build();
 
-        logger.debug("Configured URLs - Success: {}, Failure: {}, Pending: {}, Notification: {}", 
-            backUrlSuccess, backUrlFailure, backUrlPending, notificationUrl);
+        logger.debug("Configured URLs - Success: {}, Failure: {}, Pending: {}, Notification: {}",
+                backUrlSuccess, backUrlFailure, backUrlPending, notificationUrl);
 
         PreferenceRequest.PreferenceRequestBuilder builder = PreferenceRequest.builder()
                 .items(items)
@@ -70,13 +70,13 @@ public class MercadoPagoService {
 
         PreferenceRequest preferenceRequest = builder.build();
         PreferenceClient client = new PreferenceClient();
-        
+
         logger.info("Sending request to MercadoPago...");
         Preference preference = client.create(preferenceRequest);
-        
-        logger.info("Preference created successfully - ID: {}, Init Point: {}, Sandbox Init Point: {}", 
-            preference.getId(), preference.getInitPoint(), preference.getSandboxInitPoint());
-        
+
+        logger.info("Preference created successfully - ID: {}, Init Point: {}, Sandbox Init Point: {}",
+                preference.getId(), preference.getInitPoint(), preference.getSandboxInitPoint());
+
         return preference;
     }
 }

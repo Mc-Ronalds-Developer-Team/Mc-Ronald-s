@@ -1,49 +1,64 @@
-:root {
-    --primary-color: #e5133a;
+.navbar__container {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-* {
-    box-sizing: border-box;
+.nav__list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
     padding: 0;
     margin: 0;
 }
 
-.navbar__container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 0px 1px #000;
-    /* background-color: #48e; */
-}
-
-
-.nav__list {
-    margin: 10px;
-}
-
 .list__item {
-    display: inline-block;
-    margin: 10px 90px;
-    
+    margin: 0;
 }
 
 .list__link {
-    color: #000;
     text-decoration: none;
-    font-weight: 600;
-    transition: color .9s;
-    font-size: 1.1em;
-    padding: 10px 30px;
+    color: #666;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: block;
 }
 
 .list__link:hover {
-    color: var(--primary-color);
+    background-color: #ffeeb0;
+    /* Light yellow hover */
+    color: var(--primary-red);
 }
 
 .navbar .active {
-    color: var(--primary-color);
-    background-color: #fce7eb;
-    border-radius: 50px;
-    outline: 1px solid var(--primary-color);
+    background-color: var(--primary-red);
+    color: white;
+    box-shadow: 0 4px 10px rgba(218, 41, 28, 0.4);
+}
+
+/* Kiosk Touch Target Optimization */
+@media (max-width: 768px) {
+    .navbar__container {
+        padding: 10px;
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
+
+    .nav__list {
+        padding: 0 10px;
+    }
+
+    .list__link {
+        font-size: 1rem;
+        padding: 10px 20px;
+        white-space: nowrap;
+    }
 }

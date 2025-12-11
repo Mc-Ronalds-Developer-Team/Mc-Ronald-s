@@ -23,12 +23,12 @@ import java.util.Optional;
 public class MercadoPagoController {
 
     private static final Logger logger = LoggerFactory.getLogger(MercadoPagoController.class);
-    
+
     private final MercadoPagoService mercadoPagoService;
-    
+
     @Autowired
     private PaymentRepository paymentRepository;
-    
+
     @Autowired
     private OrderRepository orderRepository;
 
@@ -36,14 +36,13 @@ public class MercadoPagoController {
         this.mercadoPagoService = mercadoPagoService;
     }
 
-
     @PostMapping("/webhook")
     public ResponseEntity<Void> webhook(@RequestParam(required = false) String type,
-                                        @RequestParam(required = false) String data_id,
-                                        @RequestBody(required = false) Map<String, Object> body) {
+            @RequestParam(required = false) String data_id,
+            @RequestBody(required = false) Map<String, Object> body) {
         try {
             logger.info("Webhook received - Type: {}, Data ID: {}", type, data_id);
-            
+
             if (type != null && data_id != null) {
                 if ("payment".equals(type)) {
                     logger.info("Processing payment notification: {}", data_id);
@@ -57,7 +56,7 @@ public class MercadoPagoController {
                 String topic = (String) body.get("topic");
                 String resource = (String) body.get("resource");
                 logger.info("Alternative webhook - Topic: {}, Resource: {}", topic, resource);
-                
+
                 if ("merchant_order".equals(topic) && resource != null) {
                     logger.info("Processing merchant order: {}", resource);
                 }
@@ -88,40 +87,43 @@ public class MercadoPagoController {
             return ResponseEntity.status(500).build();
         }
     }
-    
+
     private void processPaymentNotification(String paymentId) {
         try {
             logger.info("Getting payment information from MercadoPago: {}", paymentId);
             PaymentClient client = new PaymentClient();
             Payment payment = client.get(Long.parseLong(paymentId));
-            
+
             if (payment != null) {
-                logger.info("Payment obtained from MercadoPago - ID: {}, Status: {}, External Reference: {}, Amount: {}", 
-                    payment.getId(), payment.getStatus(), payment.getExternalReference(), payment.getTransactionAmount());
-                
+                logger.info(
+                        "Payment obtained from MercadoPago - ID: {}, Status: {}, External Reference: {}, Amount: {}",
+                        payment.getId(), payment.getStatus(), payment.getExternalReference(),
+                        payment.getTransactionAmount());
+
                 String externalReference = payment.getExternalReference();
                 if (externalReference != null) {
                     logger.info("Searching payment in database by external_reference: {}", externalReference);
-                    
-                    Optional<org.mc.mcronalds.model.Payment> ourPayment = 
-                        paymentRepository.findByOrder_IdOrder(Long.parseLong(externalReference));
-                    
+
+                    Optional<org.mc.mcronalds.model.Payment> ourPayment = paymentRepository
+                            .findByOrder_IdOrder(Long.parseLong(externalReference));
+
                     if (ourPayment.isPresent()) {
                         org.mc.mcronalds.model.Payment paymentEntity = ourPayment.get();
-                        logger.info("Payment found in database with ID: {}, current status: {}", 
-                            paymentEntity.getIdPayment(), paymentEntity.getPaymentStatus());
-                        
+                        logger.info("Payment found in database with ID: {}, current status: {}",
+                                paymentEntity.getIdPayment(), paymentEntity.getPaymentStatus());
+
                         PaymentStatus newStatus = mapMercadoPagoStatus(payment.getStatus());
                         logger.info("Updating status from {} to {}", paymentEntity.getPaymentStatus(), newStatus);
-                        
+
                         paymentEntity.setPaymentStatus(newStatus);
                         if (newStatus == PaymentStatus.APPROVED) {
                             paymentEntity.setPaymentDate(LocalDateTime.now());
                         }
-                        
+
                         paymentRepository.save(paymentEntity);
-                        logger.info("Payment status updated in database: {} -> {}", paymentEntity.getIdPayment(), newStatus);
-                        
+                        logger.info("Payment status updated in database: {} -> {}", paymentEntity.getIdPayment(),
+                                newStatus);
+
                         if (newStatus == PaymentStatus.APPROVED) {
                             Order order = paymentEntity.getOrder();
                             order.setStatus(org.mc.mcronalds.model.OrderStatus.CONFIRMED);
@@ -130,10 +132,11 @@ public class MercadoPagoController {
                         }
                     } else {
                         logger.warn("Payment not found in database for external_reference: {}", externalReference);
-                        logger.debug("All payments in database: {}", 
-                            paymentRepository.findAll().stream()
-                                .map(p -> "ID: " + p.getIdPayment() + ", Order: " + p.getOrder().getIdOrder() + ", Status: " + p.getPaymentStatus())
-                                .toList());
+                        logger.debug("All payments in database: {}",
+                                paymentRepository.findAll().stream()
+                                        .map(p -> "ID: " + p.getIdPayment() + ", Order: " + p.getOrder().getIdOrder()
+                                                + ", Status: " + p.getPaymentStatus())
+                                        .toList());
                     }
                 } else {
                     logger.warn("External reference is null in MercadoPago payment");
@@ -145,7 +148,7 @@ public class MercadoPagoController {
             logger.error("Error processing payment notification: {}", e.getMessage(), e);
         }
     }
-    
+
     private PaymentStatus mapMercadoPagoStatus(String mercadoPagoStatus) {
         return switch (mercadoPagoStatus) {
             case "approved" -> PaymentStatus.APPROVED;
@@ -159,10 +162,11 @@ public class MercadoPagoController {
 
     @GetMapping("/success")
     public ResponseEntity<String> success(@RequestParam(required = false) String preference_id,
-                                          @RequestParam(required = false) String payment_id) {
+            @RequestParam(required = false) String payment_id) {
         // Aquí puedes redirigir a una página de éxito del frontend
-        // Por ejemplo: return ResponseEntity.status(302).header("Location", "http://tu-frontend.com/success").build();
-        
+        // Por ejemplo: return ResponseEntity.status(302).header("Location",
+        // "http://tu-frontend.com/success").build();
+
         String message = "Pago aprobado exitosamente";
         if (preference_id != null) {
             message += " - Preference ID: " + preference_id;
@@ -170,31 +174,31 @@ public class MercadoPagoController {
         if (payment_id != null) {
             message += " - Payment ID: " + payment_id;
         }
-        
+
         return ResponseEntity.ok(message);
     }
 
     @GetMapping("/failure")
     public ResponseEntity<String> failure(@RequestParam(required = false) String preference_id) {
         // Aquí puedes redirigir a una página de error del frontend
-        
+
         String message = "El pago fue rechazado o cancelado";
         if (preference_id != null) {
             message += " - Preference ID: " + preference_id;
         }
-        
+
         return ResponseEntity.ok(message);
     }
 
     @GetMapping("/pending")
     public ResponseEntity<String> pending(@RequestParam(required = false) String preference_id) {
         // Aquí puedes redirigir a una página de pendiente del frontend
-        
+
         String message = "El pago está pendiente de aprobación";
         if (preference_id != null) {
             message += " - Preference ID: " + preference_id;
         }
-        
+
         return ResponseEntity.ok(message);
     }
 
@@ -203,31 +207,72 @@ public class MercadoPagoController {
         return ResponseEntity.ok("MercadoPago API activa");
     }
 
-    @GetMapping("/test")
+    @PostMapping("/create-preference/{orderId}")
+    public ResponseEntity<?> createPreferenceForOrder(@PathVariable Long orderId) {
+        try {
+            // 1. Buscar la orden
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            if (orderOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            Order order = orderOpt.get();
+
+            // 2. Crear Request para MP
+            MercadoPreferenceRequest request = new MercadoPreferenceRequest();
+            request.setId(String.valueOf(order.getIdOrder()));
+            request.setTitle("Pedido McRonalds #" + order.getIdOrder());
+            request.setDescription("Compra en Kiosko McRonalds");
+            request.setQuantity(1);
+            request.setUnitPrice(order.getTotalAmount());
+            request.setCurrencyId("PEN");
+
+            // 3. Generar Preferencia
+            Preference preference = mercadoPagoService.createPreference(request);
+
+            // 4. Guardar Intento de Pago (Opcional, pero bueno para tracking)
+            org.mc.mcronalds.model.Payment payment = new org.mc.mcronalds.model.Payment();
+            payment.setOrder(order);
+            payment.setAmount(order.getTotalAmount());
+            payment.setPaymentMethod("MERCADOPAGO");
+            payment.setPaymentStatus(PaymentStatus.PENDING);
+            payment.setTransactionId(preference.getId()); // Guardamos el ID de preferencia como ref
+            payment.setPaymentDate(LocalDateTime.now());
+            paymentRepository.save(payment);
+
+            return ResponseEntity.ok(Map.of(
+                    "preference_id", preference.getId(),
+                    "init_point", preference.getInitPoint(),
+                    "sandbox_init_point", preference.getSandboxInitPoint()));
+
+        } catch (Exception e) {
+            logger.error("Error creating preference for order: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/test-preference") // Renamed old test to avoid conflict if needed, or keep as test-preference
     public ResponseEntity<?> testPreference() {
         try {
             MercadoPreferenceRequest testRequest = createTestRequest();
             Preference preference = mercadoPagoService.createPreference(testRequest);
-            
+
             createTestPayment(preference);
-            
+
             return ResponseEntity.ok(Map.of(
                     "message", "Test preference created successfully",
                     "preference_id", preference.getId(),
                     "init_point", preference.getInitPoint(),
                     "sandbox_init_point", preference.getSandboxInitPoint(),
                     "amount", "25.50",
-                    "currency", "PEN"
-            ));
+                    "currency", "PEN"));
         } catch (Exception e) {
             logger.error("Error creating test preference: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of(
                     "error", "Error creating test preference",
-                    "message", e.getMessage()
-            ));
+                    "message", e.getMessage()));
         }
     }
-    
+
     private MercadoPreferenceRequest createTestRequest() {
         MercadoPreferenceRequest testRequest = new MercadoPreferenceRequest();
         String testId = "TEST-" + System.currentTimeMillis();
@@ -239,7 +284,7 @@ public class MercadoPagoController {
         testRequest.setCurrencyId("PEN");
         return testRequest;
     }
-    
+
     private void createTestPayment(Preference preference) {
         try {
             Optional<Order> existingOrder = orderRepository.findById(1L);
@@ -253,7 +298,7 @@ public class MercadoPagoController {
                         .build();
                 return orderRepository.save(newOrder);
             });
-            
+
             org.mc.mcronalds.model.Payment payment = org.mc.mcronalds.model.Payment.builder()
                     .order(order)
                     .amount(new java.math.BigDecimal("25.50"))
@@ -262,10 +307,10 @@ public class MercadoPagoController {
                     .transactionId(preference.getId())
                     .paymentDate(LocalDateTime.now())
                     .build();
-            
+
             paymentRepository.save(payment);
             logger.info("Test payment created in database with ID: {}", payment.getIdPayment());
-            
+
         } catch (Exception e) {
             logger.error("Error creating test payment in database: {}", e.getMessage(), e);
         }
@@ -274,29 +319,28 @@ public class MercadoPagoController {
     @DeleteMapping("/cleanup")
     public ResponseEntity<?> cleanupPendingPayments() {
         try {
-            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository.findByPaymentStatus(PaymentStatus.PENDING);
+            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository
+                    .findByPaymentStatus(PaymentStatus.PENDING);
             int cleanedCount = 0;
             LocalDateTime cutoffTime = LocalDateTime.now().minusHours(1);
-            
+
             for (org.mc.mcronalds.model.Payment payment : pendingPayments) {
                 if (payment.getPaymentDate() != null && payment.getPaymentDate().isBefore(cutoffTime)) {
                     paymentRepository.delete(payment);
                     cleanedCount++;
                 }
             }
-            
+
             logger.info("Cleaned up {} old pending payments", cleanedCount);
             return ResponseEntity.ok(Map.of(
                     "message", "Cleanup completed",
                     "cleaned_payments", cleanedCount,
-                    "remaining_pending", pendingPayments.size() - cleanedCount
-            ));
+                    "remaining_pending", pendingPayments.size() - cleanedCount));
         } catch (Exception e) {
             logger.error("Error during cleanup: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of(
                     "error", "Cleanup error",
-                    "message", e.getMessage()
-            ));
+                    "message", e.getMessage()));
         }
     }
 
@@ -305,17 +349,15 @@ public class MercadoPagoController {
         try {
             logger.info("Processing test payment: {}", paymentId);
             processPaymentNotification(paymentId);
-            
+
             return ResponseEntity.ok(Map.of(
                     "message", "Payment processed successfully",
-                    "payment_id", paymentId
-            ));
+                    "payment_id", paymentId));
         } catch (Exception e) {
             logger.error("Error processing payment: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of(
                     "error", "Payment processing error",
-                    "message", e.getMessage()
-            ));
+                    "message", e.getMessage()));
         }
     }
 
@@ -323,9 +365,11 @@ public class MercadoPagoController {
     public ResponseEntity<?> getPaymentStatus() {
         try {
             List<org.mc.mcronalds.model.Payment> allPayments = paymentRepository.findAll();
-            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository.findByPaymentStatus(PaymentStatus.PENDING);
-            List<org.mc.mcronalds.model.Payment> approvedPayments = paymentRepository.findByPaymentStatus(PaymentStatus.APPROVED);
-            
+            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository
+                    .findByPaymentStatus(PaymentStatus.PENDING);
+            List<org.mc.mcronalds.model.Payment> approvedPayments = paymentRepository
+                    .findByPaymentStatus(PaymentStatus.APPROVED);
+
             return ResponseEntity.ok(Map.of(
                     "total_payments", allPayments.size(),
                     "pending_payments", pendingPayments.size(),
@@ -335,52 +379,46 @@ public class MercadoPagoController {
                             "status", p.getPaymentStatus(),
                             "amount", p.getAmount(),
                             "transaction_id", p.getTransactionId(),
-                            "order_id", p.getOrder().getIdOrder()
-                    )).toList()
-            ));
+                            "order_id", p.getOrder().getIdOrder())).toList()));
         } catch (Exception e) {
             logger.error("Error getting payment status: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of(
                     "error", "Status retrieval error",
-                    "message", e.getMessage()
-            ));
+                    "message", e.getMessage()));
         }
     }
 
     @PostMapping("/approve-all-pending")
     public ResponseEntity<?> approveAllPendingPayments() {
         try {
-            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository.findByPaymentStatus(PaymentStatus.PENDING);
+            List<org.mc.mcronalds.model.Payment> pendingPayments = paymentRepository
+                    .findByPaymentStatus(PaymentStatus.PENDING);
             int approvedCount = 0;
-            
+
             for (org.mc.mcronalds.model.Payment payment : pendingPayments) {
                 logger.info("Approving payment manually: {}", payment.getIdPayment());
                 payment.setPaymentStatus(PaymentStatus.APPROVED);
                 payment.setPaymentDate(LocalDateTime.now());
                 paymentRepository.save(payment);
-                
+
                 Order order = payment.getOrder();
                 order.setStatus(org.mc.mcronalds.model.OrderStatus.CONFIRMED);
                 orderRepository.save(order);
-                
+
                 approvedCount++;
                 logger.info("Payment approved: {}", payment.getIdPayment());
             }
-            
+
             logger.info("All pending payments approved: {}", approvedCount);
             return ResponseEntity.ok(Map.of(
                     "message", "All pending payments were approved",
-                    "approved_count", approvedCount
-            ));
+                    "approved_count", approvedCount));
         } catch (Exception e) {
             logger.error("Error approving payments: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of(
                     "error", "Payment approval error",
-                    "message", e.getMessage()
-            ));
+                    "message", e.getMessage()));
         }
     }
 
 }
-
-
